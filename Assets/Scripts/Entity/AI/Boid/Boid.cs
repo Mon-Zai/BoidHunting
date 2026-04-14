@@ -1,56 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boid : MonoBehaviour
+public class Boid : Entity
 {
-    private Rigidbody rb;
     private BoidManager manager;
-    private Vector3 acceleration = Vector3.zero;
     public BoidSettings Settings;
     public GameObject Food;
     public Hunter HunterTarget;
-    public Vector3 Velocity => rb.linearVelocity;
-    public Vector3 Position => rb.position;
     public bool NeighborsInRange => manager.GetNeighbors(this, Settings.NeighborRadius).Count > 0;
-    public int BoidCount = 0;
     public void Init(BoidManager boidManager)
     {
         manager = boidManager;
     }
-    void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
     void FixedUpdate()
     {
-        // Clamp acceleration magnitude before integrating
-        acceleration = Vector3.ClampMagnitude(acceleration, Settings.MaxAcceleration);
-
-        // Integrate: new velocity = current velocity + acceleration * dt
-        Vector3 newVelocity = rb.linearVelocity + acceleration * Time.fixedDeltaTime;
-
-        // Keep movement flat on XZ plane
-        //newVelocity.y = 0f;
-
-        // Clamp to max speed
+        _acceleration = Vector3.ClampMagnitude(_acceleration, Settings.MaxAcceleration);
+        Vector3 newVelocity = _rb.linearVelocity + _acceleration * Time.fixedDeltaTime;
         newVelocity = Vector3.ClampMagnitude(newVelocity, Settings.MaxSpeed);
-
-        rb.linearVelocity = newVelocity;
-
-        // Reset acceleration accumulator for next frame
-        acceleration = Vector3.zero;
-    }
-    void Update()
-    {
-        BoidCount = manager.GetNeighbors(this, Settings.NeighborRadius).Count;
-        Vector3 flatVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        if (flatVelocity.sqrMagnitude > 0.01f)
-            transform.forward = flatVelocity.normalized;
-    }
-    public void ApplyForce(Vector3 force)
-    {
-        force = new Vector3(force.x, 0f, force.z);
-        acceleration += force;
+        _rb.linearVelocity = newVelocity;
+        _acceleration = Vector3.zero;
     }
     public List<Boid> GetNeighbors()
     {

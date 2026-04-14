@@ -11,7 +11,6 @@ public class BoidFlock : ActionNode
     }
     protected override void PerformAction()
     {
-        Debug.Log("Flocking");
         var neighbors = boid.GetNeighbors();
         flocking.UpdateFlocking(neighbors);
     }

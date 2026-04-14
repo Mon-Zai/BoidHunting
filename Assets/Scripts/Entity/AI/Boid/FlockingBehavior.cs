@@ -15,15 +15,15 @@ public class FlockingBehavior
         foreach (var neighbor in neighbors)
         {
             if(neighbor == boid) continue;
-            cohesion += neighbor.Position;
+            cohesion += neighbor.Rigidbody.position;
         }
 
         if (neighbors.Count > 0)
         {
             cohesion /= neighbors.Count;
         }
-        Vector3 desiredVelocity = (cohesion - boid.Position).normalized * boid.Settings.MaxSpeed;
-        cohesion = desiredVelocity - boid.Velocity;
+        Vector3 desiredVelocity = (cohesion - boid.Rigidbody.position).normalized * boid.Settings.MaxSpeed;
+        cohesion = desiredVelocity - boid.Rigidbody.linearVelocity;
         return Vector3.ClampMagnitude(cohesion, boid.Settings.MaxAcceleration);
     }
     public Vector3 CalculateSeparation(List<Boid> neighbors)
@@ -34,7 +34,7 @@ public class FlockingBehavior
         foreach (var neighbor in neighbors)
         {
             if(neighbor == boid) continue;
-            Vector3 diff = boid.Position - neighbor.Position;
+            Vector3 diff = boid.Rigidbody.position - neighbor.Rigidbody.position;
             float dist = diff.magnitude;
 
             if (dist > 0 && dist < boid.Settings.SeparationRadius)
@@ -46,7 +46,7 @@ public class FlockingBehavior
         if (count > 0)
         {
             separation /= count;
-            separation = separation.normalized * boid.Settings.MaxSpeed - boid.Velocity;
+            separation = separation.normalized * boid.Settings.MaxSpeed - boid.Rigidbody.linearVelocity;
         }
         return Vector3.ClampMagnitude(separation, boid.Settings.MaxAcceleration); ;
     }
@@ -57,14 +57,14 @@ public class FlockingBehavior
         foreach (var neighbor in neighbors)
         {
             if(neighbor == boid) continue;
-            alignment += neighbor.Velocity;
+            alignment += neighbor.Rigidbody.linearVelocity;
         }
 
         if (neighbors.Count > 0)
         {
             alignment /= neighbors.Count;
             alignment = alignment.normalized * boid.Settings.MaxSpeed;
-            alignment -= boid.Velocity;
+            alignment -= boid.Rigidbody.linearVelocity;
         }
         return Vector3.ClampMagnitude(alignment, boid.Settings.MaxAcceleration);
 

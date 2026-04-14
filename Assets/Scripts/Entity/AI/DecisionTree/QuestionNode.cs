@@ -1,4 +1,4 @@
-public abstract class QuestionNode : Node
+public class QuestionNode : Node
 {
     private Node _trueNode;
     private Node _falseNode;

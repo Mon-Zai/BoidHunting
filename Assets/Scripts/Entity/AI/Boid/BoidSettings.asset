@@ -12,19 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b1398b1c7788b94a96eeccbeccfa0db, type: 3}
   m_Name: BoidSettings
   m_EditorClassIdentifier: 
-  MaxSpeed: 20
-  MaxAcceleration: 20
-  SlowingRadius: 0
-  WanderRadius: 35
-  WanderDistance: 148.32
-  WanderJitter: 1
+  MaxSpeed: 25
+  MaxAcceleration: 35
+  SlowingRadius: 8
   PursuePredictionTime: 1
   EvadePredictionTime: 1
   ObstacleAvoidanceDistance: 10
-  ObstacleAvoidanceWeight: 1
-  ObstacleAvoidanceAngle: 10
+  ObstacleAvoidanceWeight: 10
+  ObstacleAvoidanceAngle: 25
+  WanderRadius: 5
+  WanderDistance: 10
+  WanderJitter: 3
   NeighborRadius: 15
   SeparationRadius: 10
   SeparationWeight: 5
-  AlignmentWeight: 3
-  CohesionWeight: 3
+  AlignmentWeight: 8
+  CohesionWeight: 4
+  FoodAttractionWeight: 1
+  HunterRepulsionWeight: 7

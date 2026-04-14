@@ -2,43 +2,62 @@ using UnityEngine;
 
 public class ObstacleAvoidance : MonoBehaviour
 {
-    public LayerMask obstacleLayer;
-    public BoidSettings Settings;
-    public Vector3 ObstaclePosition { get; private set; }
     private RaycastHit _obstacleHit;
-    public bool ObstacleInFront => ObstaclePosition != Vector3.zero;
+    private float _avoidanceCooldown = 0;
+    private const float CooldownFrames = 0.2f;
+    public LayerMask obstacleLayer;
+    public AISettings Settings;
+    public Vector3 ObstaclePosition { get; private set; }
+    public bool ObstacleInFront => _avoidanceCooldown > 0 || (ObstaclePosition != Vector3.zero);
+    private Entity entity;
 
+    void Awake()
+    {
+        entity = GetComponent<Entity>();
+    }
+    void Update()
+    {
+        if (_avoidanceCooldown > 0) _avoidanceCooldown -= Time.deltaTime;
+
+        if (ObstaclePosition != Vector3.zero)
+        {
+            _avoidanceCooldown = CooldownFrames;
+        }
+    }
     void FixedUpdate()
     {
         Vector3 dirForward = transform.forward;
-        Vector3 dirLeft = Quaternion.AngleAxis(-Settings.ObstacleAvoidanceAngle, Vector3.up) * dirForward;
-        Vector3 dirRight = Quaternion.AngleAxis(Settings.ObstacleAvoidanceAngle, Vector3.up) * dirForward;
+        Vector3 dirLeft = Quaternion.AngleAxis(-Settings.ObstacleAvoidanceAngle, transform.up) * dirForward;
+        Vector3 dirRight = Quaternion.AngleAxis(Settings.ObstacleAvoidanceAngle, transform.up) * dirForward;
 
-        if (Physics.Raycast(transform.position, dirForward, out _obstacleHit, Settings.ObstacleAvoidanceDistance, obstacleLayer)
-        || Physics.Raycast(transform.position, dirLeft, out _obstacleHit, Settings.ObstacleAvoidanceDistance, obstacleLayer)
-         || Physics.Raycast(transform.position, dirRight, out _obstacleHit, Settings.ObstacleAvoidanceDistance, obstacleLayer))
+        float minDist = Settings.ObstacleAvoidanceDistance;
+        bool hitFound = false;
+        RaycastHit tempHit;
+
+        Vector3[] dirs = { dirForward, dirLeft, dirRight };
+
+        foreach (Vector3 dir in dirs)
         {
-            ObstaclePosition = _obstacleHit.point;
-
+            if (Physics.Raycast(transform.position, dir, out tempHit, minDist, obstacleLayer))
+            {
+                _obstacleHit = tempHit;
+                minDist = tempHit.distance;
+                hitFound = true;
+            }
         }
-        else
+
+        ObstaclePosition = hitFound ? _obstacleHit.point : Vector3.zero;
+        if (ObstacleInFront)
         {
-            ObstaclePosition = Vector3.zero;
+            Vector3 evadeForce = ObstacleNormal(entity.Rigidbody.linearVelocity);
+            entity.ApplyForce(evadeForce * Settings.ObstacleAvoidanceWeight);
         }
     }
     public Vector3 ObstacleNormal(Vector3 velocity)
     {
         Vector3 normal = _obstacleHit.normal;
-        normal.y = 0f;
-
-        // Componente tangencial: desliza a lo largo de la pared
-        Vector3 tangent = Vector3.Cross(normal, Vector3.up).normalized;
-
-        // Usa el tangente que apunta más en la dirección del movimiento actual
-        if (Vector3.Dot(tangent, velocity) < 0f)
-            tangent = -tangent;
-
-        Vector3 desiredVelocity = (normal + tangent).normalized * Settings.MaxSpeed;
+        Vector3 slideDir = Vector3.ProjectOnPlane(velocity, normal).normalized;
+        Vector3 desiredVelocity = (normal + slideDir).normalized * Settings.MaxSpeed;
         return desiredVelocity - velocity;
     }
     void OnDrawGizmosSelected()

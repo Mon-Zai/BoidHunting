@@ -11,8 +11,11 @@ public class BoidWander : ActionNode
     }
     protected override void PerformAction()
     {
-        Debug.Log("Wandering");
-        var wanderForce = steering.Wander();
+        var wanderForce = steering.Wander(boid.Settings.WanderDistance,
+                            boid.Settings.WanderRadius,
+                            boid.Settings.WanderJitter, 
+                            boid.transform.position,
+                            boid.Settings.MaxSpeed);
         boid.ApplyForce(wanderForce);
     }
 }

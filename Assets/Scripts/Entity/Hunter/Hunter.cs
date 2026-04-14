@@ -1,17 +1,28 @@
 using UnityEngine;
 
-public class Hunter : MonoBehaviour
+public class Hunter : Entity
 {
-    private Rigidbody rb;
-    public Vector3 acceleration = Vector3.forward;
-    void Awake()
+    [SerializeField] private HunterSettings _settings;
+    public HunterSettings Settings => _settings;
+    public float Stamina;
+    protected override void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        base.Awake();
+        Stamina = _settings.MaxStamina;
     }
     void FixedUpdate()
     {
-        transform.forward = rb.linearVelocity.normalized;
-        rb.linearVelocity += acceleration * Time.fixedDeltaTime;
-        rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, 15f);
+        _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
+        Vector3 newVelocity = _rb.linearVelocity + _acceleration * Time.fixedDeltaTime;
+        newVelocity = Vector3.ClampMagnitude(newVelocity, _settings.MaxSpeed);
+        _rb.linearVelocity = newVelocity;
+        _acceleration = Vector3.zero;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, Settings.SlowingRadius);
+        Gizmos.color = Color.blue;
     }
 }

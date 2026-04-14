@@ -2,67 +2,65 @@ using UnityEngine;
 
 public class SteeringBehavior
 {
-    private Boid boid;
-    public SteeringBehavior(Boid boid)
+    private Rigidbody _rb;
+    private Vector3 _wanderTarget = Vector3.forward; // persiste entre frames
+
+    public SteeringBehavior(Rigidbody rb)
     {
-        this.boid = boid;
+        _rb = rb;
     }
-    public Vector3 Seek(Vector3 targetPosition)
+    public Vector3 Seek(Vector3 targetPosition, float maxSpeed)
     {
-        Vector3 desiredVelocity = (targetPosition - boid.Position).normalized * boid.Settings.MaxSpeed;
-        Vector3 steering = desiredVelocity - boid.Velocity;
+        Vector3 desiredVelocity = (targetPosition - _rb.position).normalized * maxSpeed;
+        Vector3 steering = desiredVelocity - _rb.linearVelocity;
         return steering;
     }
-    public Vector3 Flee(Vector3 threatPosition)
+    public Vector3 Flee(Vector3 threatPosition, float maxSpeed)
     {
-        return -Seek(threatPosition);
+        return -Seek(threatPosition, maxSpeed);
     }
-    public Vector3 Arrive(Vector3 targetPosition)
+    public Vector3 Arrive(Vector3 targetPosition, float maxSpeed, float maxAcceleration, float slowingRadius)
     {
-        Vector3 toTarget = targetPosition - boid.Position;
+        Vector3 toTarget = targetPosition - _rb.position;
         float distance = toTarget.magnitude;
 
         if (distance < 0.01f) return Vector3.zero;
 
-        float targetSpeed = boid.Settings.MaxSpeed;
+        float targetSpeed = maxSpeed;
 
-        if (distance < boid.Settings.SlowingRadius)
+        if (distance < slowingRadius)
         {
-            targetSpeed = boid.Settings.MaxSpeed * (distance / boid.Settings.SlowingRadius);
+            targetSpeed = maxSpeed * (distance / slowingRadius);
         }
 
         Vector3 desired = toTarget.normalized * targetSpeed;
-        Vector3 steering = desired - boid.Velocity;
-        return Vector3.ClampMagnitude(steering, boid.Settings.MaxAcceleration);
+        Vector3 steering = desired - _rb.linearVelocity;
+        return Vector3.ClampMagnitude(steering, maxAcceleration);
     }
-    public Vector3 Wander()
+    public Vector3 Wander(float wanderDistance, float wanderRadius, float wanderJitter, Vector3 currentPosition, float maxSpeed)
     {
-        Vector3 wanderTarget = boid.transform.forward;
-        wanderTarget += new Vector3(
-            Random.Range(-1f, 1f) * boid.Settings.WanderJitter,
-            Random.Range(-1f, 1f) * boid.Settings.WanderJitter,
-            Random.Range(-1f, 1f) * boid.Settings.WanderJitter
+        _wanderTarget += new Vector3(
+            Random.Range(-1f, 1f) * wanderJitter,
+            0f,
+            Random.Range(-1f, 1f) * wanderJitter
         );
 
-        wanderTarget.Normalize();
-        wanderTarget *= boid.Settings.WanderRadius;
+        _wanderTarget = _wanderTarget.normalized * wanderRadius;
 
-        Vector3 targetLocal = wanderTarget + new Vector3(0, 0, boid.Settings.WanderDistance);
-
-        Vector3 forward = boid.Velocity.magnitude > 0.1f ? boid.Velocity.normalized : Vector3.forward;
+        Vector3 forward = _rb.linearVelocity.magnitude > 0.1f ? _rb.linearVelocity.normalized : _rb.transform.forward;
         Quaternion rotation = Quaternion.LookRotation(forward);
-        Vector3 targetWorld = boid.Position + rotation * targetLocal;
+        Vector3 targetWorld = currentPosition + rotation * (_wanderTarget + new Vector3(0f, 0f, wanderDistance));
 
-        return Seek(targetWorld);
+        return Seek(targetWorld, maxSpeed);
     }
-    public Vector3 Pursue(Vector3 targetPosition, Vector3 targetVelocity, float predictionTime)
+    public Vector3 Pursue(Vector3 targetPosition, Vector3 targetVelocity, float predictionTime, float maxSpeed)
     {
         var futurePosition = targetPosition + (predictionTime * targetVelocity);
-        return Seek(futurePosition);
+        return Seek(futurePosition, maxSpeed);
     }
-    public Vector3 Evade(Vector3 threatPosition, Vector3 threatVelocity, float predictionTime)
+    public Vector3 Evade(Vector3 threatPosition, Vector3 threatVelocity, float predictionTime, float maxSpeed)
     {
         var futurePosition = threatPosition + (predictionTime * threatVelocity);
-        return Flee(futurePosition);
+        return Flee(futurePosition, maxSpeed);
     }
 }
