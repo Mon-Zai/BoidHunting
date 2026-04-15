@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FOV : MonoBehaviour
@@ -6,9 +8,14 @@ public class FOV : MonoBehaviour
     [SerializeField] private HunterSettings settings;
     [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask obstructionMask;
-
+    Hunter _hunter;
     public bool BoidOnSight { get; private set; }
     public Transform VisibleTarget { get; private set; }
+    void Awake()
+    {
+        _hunter = GetComponent<Hunter>();
+        BoidOnSight = false;
+    }
 
     void Start()
     {
@@ -27,10 +34,15 @@ public class FOV : MonoBehaviour
 
     void FieldOfView()
     {
-        BoidOnSight = false;
+        bool currentBoidOnSight = false;
         VisibleTarget = null;
-
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, settings.DetectionRange, targetMask);
+        rangeChecks = rangeChecks.OrderBy(col => Vector3.Distance(transform.position, col.transform.position)).ToArray();
+        foreach (Collider col in rangeChecks)
+        {
+            if (col.TryGetComponent(out Boid boid))
+                boid.SetHunterTarget(_hunter);
+        }
 
         foreach (Collider col in rangeChecks)
         {
@@ -42,10 +54,11 @@ public class FOV : MonoBehaviour
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
             if (Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask)) continue;
 
-            BoidOnSight = true;
+            currentBoidOnSight = true;
             VisibleTarget = target;
             break;
         }
+        BoidOnSight = currentBoidOnSight;
     }
 
     private void OnDrawGizmosSelected()
@@ -54,7 +67,7 @@ public class FOV : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, settings.DetectionRange);
 
         Vector3 fovLine1 = DirectionFromAngle(transform.eulerAngles.y, -settings.FieldOfViewAngle / 2);
-        Vector3 fovLine2 = DirectionFromAngle(transform.eulerAngles.y,  settings.FieldOfViewAngle / 2);
+        Vector3 fovLine2 = DirectionFromAngle(transform.eulerAngles.y, settings.FieldOfViewAngle / 2);
 
         Gizmos.color = BoidOnSight ? Color.green : Color.blue;
         Gizmos.DrawLine(transform.position, transform.position + fovLine1 * settings.DetectionRange);

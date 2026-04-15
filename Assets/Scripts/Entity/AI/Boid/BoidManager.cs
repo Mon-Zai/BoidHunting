@@ -25,7 +25,7 @@ public class BoidManager : MonoBehaviour
         {
             Vector3 randomPos = new Vector3(
                 Random.Range(-spawnBounds.x, spawnBounds.x),
-                Random.Range(0, spawnBounds.y),
+                3.6f,
                 Random.Range(-spawnBounds.z, spawnBounds.z)
             );
 
@@ -53,5 +53,13 @@ public class BoidManager : MonoBehaviour
         }
 
         return neighbors;
+    }
+    public void RemoveBoid(Boid boid)
+    {
+        if (allBoids.Contains(boid))
+        {
+            allBoids.Remove(boid);
+            Destroy(boid.gameObject);
+        }
     }
 }

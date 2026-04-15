@@ -15,16 +15,16 @@ public class FlockingBehavior
         foreach (var neighbor in neighbors)
         {
             if(neighbor == boid) continue;
-            cohesion += neighbor.Rigidbody.position;
+            cohesion += neighbor.gameObject.transform.position;
         }
 
         if (neighbors.Count > 0)
         {
             cohesion /= neighbors.Count;
         }
-        Vector3 desiredVelocity = (cohesion - boid.Rigidbody.position).normalized * boid.Settings.MaxSpeed;
-        cohesion = desiredVelocity - boid.Rigidbody.linearVelocity;
-        return Vector3.ClampMagnitude(cohesion, boid.Settings.MaxAcceleration);
+        Vector3 desiredVelocity = (cohesion - boid.gameObject.transform.position).normalized * boid.Settings.MaxSpeed;
+        cohesion = desiredVelocity - boid.Velocity;
+        return cohesion;
     }
     public Vector3 CalculateSeparation(List<Boid> neighbors)
     {
@@ -34,7 +34,7 @@ public class FlockingBehavior
         foreach (var neighbor in neighbors)
         {
             if(neighbor == boid) continue;
-            Vector3 diff = boid.Rigidbody.position - neighbor.Rigidbody.position;
+            Vector3 diff = boid.gameObject.transform.position - neighbor.gameObject.transform.position;
             float dist = diff.magnitude;
 
             if (dist > 0 && dist < boid.Settings.SeparationRadius)
@@ -46,9 +46,9 @@ public class FlockingBehavior
         if (count > 0)
         {
             separation /= count;
-            separation = separation.normalized * boid.Settings.MaxSpeed - boid.Rigidbody.linearVelocity;
+            separation = separation.normalized * boid.Settings.MaxSpeed - boid.Velocity;
         }
-        return Vector3.ClampMagnitude(separation, boid.Settings.MaxAcceleration); ;
+        return separation;
     }
     public Vector3 CalculateAlignment(List<Boid> neighbors)
     {
@@ -57,16 +57,16 @@ public class FlockingBehavior
         foreach (var neighbor in neighbors)
         {
             if(neighbor == boid) continue;
-            alignment += neighbor.Rigidbody.linearVelocity;
+            alignment += neighbor.Velocity;
         }
 
         if (neighbors.Count > 0)
         {
             alignment /= neighbors.Count;
             alignment = alignment.normalized * boid.Settings.MaxSpeed;
-            alignment -= boid.Rigidbody.linearVelocity;
+            alignment -= boid.Velocity;
         }
-        return Vector3.ClampMagnitude(alignment, boid.Settings.MaxAcceleration);
+        return alignment;
 
     }
     public void UpdateFlocking(List<Boid> neighbors)

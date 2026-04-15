@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86debdf0766b7c24ca6cd16ff32fbe4c, type: 3}
   m_Name: HunterSettings
   m_EditorClassIdentifier: 
-  MaxSpeed: 40
-  MaxAcceleration: 35
-  SlowingRadius: 30
+  MaxSpeed: 35
+  MaxAcceleration: 25
+  SlowingRadius: 50
   PursuePredictionTime: 2
   EvadePredictionTime: 2
   ObstacleAvoidanceDistance: 15
@@ -22,6 +22,7 @@ MonoBehaviour:
   ObstacleAvoidanceAngle: 60
   MaxStamina: 100
   StaminaConsumptionRate: 3
-  StaminaRecoveryRate: 25
-  DetectionRange: 40
-  FieldOfViewAngle: 120
+  StaminaRecoveryRate: 30
+  DetectionRange: 50
+  KillRange: 18
+  FieldOfViewAngle: 125

@@ -8,6 +8,7 @@ public class HunterSettings : AISettings
     public float StaminaConsumptionRate = 10f;
     public float StaminaRecoveryRate = 5f;
     public float DetectionRange = 10f;
+    public float KillRange = 1f;
     [Range(0f, 180f)]
     public float FieldOfViewAngle = 120f;
 

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7986723402881771940}
   - component: {fileID: 2495096257253041118}
   - component: {fileID: 8613544582275858481}
-  - component: {fileID: 7179181121659204536}
   - component: {fileID: -3665337388149957835}
   - component: {fileID: 1100882594475392636}
   - component: {fileID: 8239205512763729527}
@@ -59,36 +58,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5605510351ff7424d9f5f883446f5f71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Settings: {fileID: 11400000, guid: ea44c651bff8afc4ca88d57806fe2632, type: 2}
+  _settings: {fileID: 11400000, guid: ea44c651bff8afc4ca88d57806fe2632, type: 2}
   Food: {fileID: 0}
   HunterTarget: {fileID: 0}
---- !u!54 &7179181121659204536
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2901383129322909076}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!114 &-3665337388149957835
 MonoBehaviour:
   m_ObjectHideFlags: 0

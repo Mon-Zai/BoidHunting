@@ -10,19 +10,33 @@ public class Hunter : Entity
         base.Awake();
         Stamina = _settings.MaxStamina;
     }
+    protected override void Update()
+    {
+        base.Update();
+    }
     void FixedUpdate()
     {
+        CalculateMovement();
+    }
+    void CalculateMovement()
+    {
         _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
-        Vector3 newVelocity = _rb.linearVelocity + _acceleration * Time.fixedDeltaTime;
+        Vector3 newVelocity = _velocity + _acceleration * Time.deltaTime;
         newVelocity = Vector3.ClampMagnitude(newVelocity, _settings.MaxSpeed);
-        _rb.linearVelocity = newVelocity;
+        _velocity = newVelocity;
+        transform.position += _velocity * Time.deltaTime;
         _acceleration = Vector3.zero;
     }
-
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, Settings.SlowingRadius);
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, Settings.KillRange);
+    }
+    public override void ApplyForce(Vector3 force)
+    {
+        base.ApplyForce(force);
+        _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
     }
 }

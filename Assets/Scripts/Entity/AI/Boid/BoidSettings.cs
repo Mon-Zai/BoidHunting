@@ -3,7 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BoidSettings", menuName = "AI/Boid Settings")]
 public class BoidSettings : AISettings
 {
-
+    [Header("Hunted")]
+    public float persuedCooldown = 5f;
     [Header("Steering")]
     public float WanderRadius = 1f;
     public float WanderDistance = 2f;

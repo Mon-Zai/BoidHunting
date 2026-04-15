@@ -9,7 +9,6 @@ public enum HunterState
 public class HunterStateMachine : MonoBehaviour
 {
     private Hunter hunter;
-    private Rigidbody _rb;
     private FOV _fov;
     private StateMachine<HunterState> _stateMachine;
     //States
@@ -22,10 +21,9 @@ public class HunterStateMachine : MonoBehaviour
     void Awake()
     {
         hunter = GetComponent<Hunter>();
-        _rb = GetComponent<Rigidbody>();
         _fov = GetComponent<FOV>();
         _stateMachine = new StateMachine<HunterState>();
-        _steering = new SteeringBehavior(_rb);
+        _steering = new SteeringBehavior(hunter);
 
         _idleState = new IdleState(hunter);
         _patrolState = new PatrolState(hunter, _patrolWaypoints, _steering, _fov);
@@ -51,15 +49,24 @@ public class HunterStateMachine : MonoBehaviour
         IPredicate isTired = new SimplePredicate(() => hunter.Stamina <= 0f);
         IPredicate isRested = new SimplePredicate(() => hunter.Stamina >= hunter.Settings.MaxStamina);
         IPredicate hasWaypoints = new SimplePredicate(() => _patrolWaypoints.Length > 0);
-
+        IPredicate seesPrey = new SimplePredicate(() => _fov.BoidOnSight);
+        IPredicate lostPrey = new SimplePredicate(() => !_fov.BoidOnSight);
 
         StateTransition<HunterState> idleToPatrol = new StateTransition<HunterState>(HunterState.Patrol)
         .SetPredicate(new AndPredicate(isRested, hasWaypoints));
         _stateMachine.AddTransition(HunterState.Idle, idleToPatrol, TransitionContext.Update);
 
+        StateTransition<HunterState> patrolToHunt = new StateTransition<HunterState>(HunterState.Hunt)
+        .SetPredicate(seesPrey);
+        _stateMachine.AddTransition(HunterState.Patrol, patrolToHunt, TransitionContext.Update);
 
-        StateTransition<HunterState> patrolToIdle = new StateTransition<HunterState>(HunterState.Idle)
+        StateTransition<HunterState> huntToPatrol = new StateTransition<HunterState>(HunterState.Patrol)
+        .SetPredicate(lostPrey);
+        _stateMachine.AddTransition(HunterState.Hunt, huntToPatrol, TransitionContext.Update);
+
+        StateTransition<HunterState> toIdle = new StateTransition<HunterState>(HunterState.Idle)
         .SetPredicate(isTired);
-        _stateMachine.AddTransition(HunterState.Patrol, patrolToIdle, TransitionContext.Update);
+        _stateMachine.AddTransition(HunterState.Patrol, toIdle, TransitionContext.Update);
+        _stateMachine.AddTransition(HunterState.Hunt, toIdle, TransitionContext.Update);
     }
 }

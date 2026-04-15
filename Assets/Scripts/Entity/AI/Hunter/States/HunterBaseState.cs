@@ -23,11 +23,11 @@ public class HunterBaseState : IState
 
     public virtual void Update()
     {
-        if (hunter.Rigidbody.linearVelocity.magnitude > 0.1f)
+        if (hunter.Velocity.magnitude > 0.1f)
         {
-            Vector3 flatVelocity = new Vector3(hunter.Rigidbody.linearVelocity.x, 0f, hunter.Rigidbody.linearVelocity.z);
+            Vector3 flatVelocity = new Vector3(hunter.Velocity.x, 0f, hunter.Velocity.z);
             if (flatVelocity.sqrMagnitude > 0.01f)
-                hunter.Rigidbody.transform.forward = flatVelocity.normalized;
+                hunter.transform.forward = flatVelocity.normalized;
         }
     }
 

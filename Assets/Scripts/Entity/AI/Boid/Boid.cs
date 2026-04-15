@@ -4,7 +4,9 @@ using UnityEngine;
 public class Boid : Entity
 {
     private BoidManager manager;
-    public BoidSettings Settings;
+    private float currentPersuedCooldown = 0f;
+    [SerializeField] private BoidSettings _settings;
+    public BoidSettings Settings => _settings;
     public GameObject Food;
     public Hunter HunterTarget;
     public bool NeighborsInRange => manager.GetNeighbors(this, Settings.NeighborRadius).Count > 0;
@@ -12,19 +14,45 @@ public class Boid : Entity
     {
         manager = boidManager;
     }
+    protected override void Update()
+    {
+        base.Update();
+        PursuedTimer();
+
+    }
     void FixedUpdate()
     {
-        _acceleration = Vector3.ClampMagnitude(_acceleration, Settings.MaxAcceleration);
-        Vector3 newVelocity = _rb.linearVelocity + _acceleration * Time.fixedDeltaTime;
-        newVelocity = Vector3.ClampMagnitude(newVelocity, Settings.MaxSpeed);
-        _rb.linearVelocity = newVelocity;
+        CalculateMovement();
+    }
+    void CalculateMovement()
+    {
+        _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
+        Vector3 newVelocity = _velocity + _acceleration * Time.deltaTime;
+        newVelocity = Vector3.ClampMagnitude(newVelocity, _settings.MaxSpeed);
+        _velocity = newVelocity;
+        transform.position += _velocity * Time.deltaTime;
         _acceleration = Vector3.zero;
+    }
+    private void PursuedTimer()
+    {
+        if (currentPersuedCooldown > 0f)
+        {
+            currentPersuedCooldown -= Time.deltaTime;
+            if (currentPersuedCooldown <= 0f)
+            {
+                HunterTarget = null;
+            }
+        }
     }
     public List<Boid> GetNeighbors()
     {
         return manager.GetNeighbors(this, Settings.NeighborRadius);
     }
-
+    public void SetHunterTarget(Hunter hunter)
+    {
+        HunterTarget = hunter;
+        currentPersuedCooldown = Settings.persuedCooldown;
+    }
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
@@ -46,5 +74,8 @@ public class Boid : Entity
             Gizmos.DrawLine(transform.position, HunterTarget.transform.position);
         }
     }
-
+    public void GetCaught()
+    {
+        manager.RemoveBoid(this);
+    }
 }

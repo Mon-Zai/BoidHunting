@@ -16,7 +16,7 @@ public class BoidDecisionTree : MonoBehaviour
     void Awake()
     {
         boid = GetComponent<Boid>();
-        steeringBehavior = new SteeringBehavior(boid.Rigidbody);
+        steeringBehavior = new SteeringBehavior(boid);
         flockingBehavior = new FlockingBehavior(boid);
 
         _decisionBehaviorTree = new DecisionTree();

@@ -16,13 +16,10 @@ public class BoidEvadeHunter : ActionNode
         if (boid.HunterTarget != null)
         {
             Hunter hunter = boid.HunterTarget;
-            if (hunter.TryGetComponent(out Rigidbody rb))
-            {
-                var evadeForce = steering.Evade(boid.HunterTarget.transform.position, 
-                                rb.linearVelocity, boid.Settings.EvadePredictionTime, 
-                                boid.Settings.MaxSpeed);
-                boid.ApplyForce(evadeForce * boid.Settings.HunterRepulsionWeight);
-            }
+            var evadeForce = steering.Evade(boid.HunterTarget.transform.position,
+                            hunter.Velocity, boid.Settings.EvadePredictionTime,
+                            boid.Settings.MaxSpeed);
+            boid.ApplyForce(evadeForce * boid.Settings.HunterRepulsionWeight);
         }
     }
 

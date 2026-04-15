@@ -172,7 +172,6 @@ GameObject:
   - component: {fileID: 169582492}
   - component: {fileID: 169582491}
   - component: {fileID: 169582490}
-  - component: {fileID: 169582489}
   - component: {fileID: 169582488}
   - component: {fileID: 169582494}
   - component: {fileID: 169582495}
@@ -198,33 +197,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _settings: {fileID: 11400000, guid: 8fba5f1d162546647b9fdcd44cc41767, type: 2}
   Stamina: 100
---- !u!54 &169582489
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 169582487}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 112
-  m_CollisionDetection: 1
 --- !u!136 &169582490
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -310,7 +282,7 @@ Transform:
   m_GameObject: {fileID: 169582487}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.40898, y: 5.55, z: -169.8}
+  m_LocalPosition: {x: -20.40898, y: 3.6, z: -169.8}
   m_LocalScale: {x: 3.6488051, y: 3.6488051, z: 3.6488051}
   m_ConstrainProportionsScale: 0
   m_Children: []

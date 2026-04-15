@@ -11,7 +11,7 @@ public class BoidEvadeObstacle : ActionNode
     }
     protected override void PerformAction()
     {
-        Vector3 evadeForce = obstacleAvoidance.ObstacleNormal(boid.Rigidbody.linearVelocity);
+        Vector3 evadeForce = obstacleAvoidance.ObstacleNormal(boid.Velocity);
         boid.ApplyForce(evadeForce * boid.Settings.ObstacleAvoidanceWeight);
     }
 }

@@ -22,7 +22,6 @@ public class PatrolState : HunterBaseState
     {
         base.Update();
         ConsumeStamina();
-
     }
     public override void FixedUpdate()
     {
@@ -39,7 +38,7 @@ public class PatrolState : HunterBaseState
         Vector3 targetPosition = patrolWaypoints[currentWaypointIndex].position;
         Vector3 steeringForce = steering.Arrive(targetPosition, hunter.Settings.MaxSpeed, hunter.Settings.MaxAcceleration, hunter.Settings.SlowingRadius);
         hunter.ApplyForce(steeringForce);
-        _distanceToWaypoint = Vector3.Distance(hunter.transform.position, targetPosition);
+        _distanceToWaypoint = Vector3.Distance(hunter.transform.position, new Vector3(targetPosition.x, hunter.transform.position.y, targetPosition.z));
         CheckWaypointDistance();
     }
     private void RandomReverse()
@@ -51,9 +50,9 @@ public class PatrolState : HunterBaseState
     }
     private void CheckWaypointDistance()
     {
-        if (_distanceToWaypoint < 1.5f)
+        if (_distanceToWaypoint < 0.5f)
         {
-            hunter.Rigidbody.linearVelocity = Vector3.zero;
+            //hunter.Velocity = Vector3.zero;
             if (!isReversing)
             {
                 currentWaypointIndex = (currentWaypointIndex + 1) % patrolWaypoints.Length;

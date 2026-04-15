@@ -49,7 +49,7 @@ public class ObstacleAvoidance : MonoBehaviour
         ObstaclePosition = hitFound ? _obstacleHit.point : Vector3.zero;
         if (ObstacleInFront)
         {
-            Vector3 evadeForce = ObstacleNormal(entity.Rigidbody.linearVelocity);
+            Vector3 evadeForce = ObstacleNormal(entity.Velocity);
             entity.ApplyForce(evadeForce * Settings.ObstacleAvoidanceWeight);
         }
     }
