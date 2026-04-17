@@ -43,10 +43,16 @@ public class PatrolState : HunterBaseState
     }
     private void RandomReverse()
     {
-        if (Random.value < 0.01f)
+        if (Random.value < 0.5f)
         {
             isReversing = !isReversing;
+            Debug.Log("Hunter reversed patrol direction: " + isReversing);
         }
+        else
+        {
+            Debug.Log("Hunter continues in the same patrol direction: " + isReversing);
+        }
+
     }
     private void CheckWaypointDistance()
     {

@@ -15,15 +15,15 @@ MonoBehaviour:
   MaxSpeed: 60
   MaxAcceleration: 25
   SlowingRadius: 50
-  linearDrag: 0.01
+  linearDrag: 0.02
   PursuePredictionTime: 2
   EvadePredictionTime: 2
   ObstacleAvoidanceDistance: 15
-  ObstacleAvoidanceWeight: 2
+  ObstacleAvoidanceWeight: 5
   ObstacleAvoidanceAngle: 60
   MaxStamina: 100
-  StaminaConsumptionRate: 3
-  StaminaRecoveryRate: 10
+  StaminaConsumptionRate: 1
+  StaminaRecoveryRate: 16
   DetectionRange: 50
   KillRange: 18
   KillStaminaCost: 20

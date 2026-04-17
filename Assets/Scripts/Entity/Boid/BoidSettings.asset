@@ -19,8 +19,9 @@ MonoBehaviour:
   PursuePredictionTime: 1
   EvadePredictionTime: 1
   ObstacleAvoidanceDistance: 10
-  ObstacleAvoidanceWeight: 15
+  ObstacleAvoidanceWeight: 25
   ObstacleAvoidanceAngle: 25
+  ConsumeRadius: 1.5
   persuedCooldown: 5
   WanderRadius: 1
   WanderDistance: 1
