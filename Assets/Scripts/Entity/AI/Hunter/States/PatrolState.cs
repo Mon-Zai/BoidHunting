@@ -21,7 +21,7 @@ public class PatrolState : HunterBaseState
     public override void Update()
     {
         base.Update();
-        ConsumeStamina();
+        hunter.ConsumeStamina(hunter.Settings.StaminaConsumptionRate, Time.deltaTime);
     }
     public override void FixedUpdate()
     {
@@ -52,7 +52,6 @@ public class PatrolState : HunterBaseState
     {
         if (_distanceToWaypoint < 0.5f)
         {
-            //hunter.Velocity = Vector3.zero;
             if (!isReversing)
             {
                 currentWaypointIndex = (currentWaypointIndex + 1) % patrolWaypoints.Length;
@@ -71,11 +70,4 @@ public class PatrolState : HunterBaseState
             }
         }
     }
-    private void ConsumeStamina()
-    {
-        if (hunter.Stamina <= 0f) return;
-        hunter.Stamina -= Time.deltaTime * hunter.Settings.StaminaConsumptionRate;
-        hunter.Stamina = Mathf.Clamp(hunter.Stamina, 0f, hunter.Settings.MaxStamina);
-    }
-
 }

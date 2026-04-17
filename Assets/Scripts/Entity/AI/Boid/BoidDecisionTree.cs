@@ -21,7 +21,7 @@ public class BoidDecisionTree : MonoBehaviour
 
         _decisionBehaviorTree = new DecisionTree();
 
-        _QfoodNearbyNode = new QuestionNode(new SimplePredicate(() => boid.Food != null));
+        _QfoodNearbyNode = new QuestionNode(new SimplePredicate(() => boid.FoodTarget != null));
         _QhunterNearbyNode = new QuestionNode(new SimplePredicate(() => boid.HunterTarget != null));
         _QboidsNearbyNode = new QuestionNode(new SimplePredicate(() => boid.NeighborsInRange));
 

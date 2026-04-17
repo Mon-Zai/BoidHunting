@@ -8,9 +8,10 @@ public class FOV : MonoBehaviour
     [SerializeField] private HunterSettings settings;
     [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask obstructionMask;
-    Hunter _hunter;
+    private Hunter _hunter;
+    private HashSet<Transform> _visibleTargets = new HashSet<Transform>();
     public bool BoidOnSight { get; private set; }
-    public Transform VisibleTarget { get; private set; }
+    public Transform NearestTarget => _visibleTargets.OrderBy(t => Vector3.Distance(transform.position, t.position)).FirstOrDefault();
     void Awake()
     {
         _hunter = GetComponent<Hunter>();
@@ -35,7 +36,7 @@ public class FOV : MonoBehaviour
     void FieldOfView()
     {
         bool currentBoidOnSight = false;
-        VisibleTarget = null;
+        _visibleTargets.Clear();
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, settings.DetectionRange, targetMask);
         rangeChecks = rangeChecks.OrderBy(col => Vector3.Distance(transform.position, col.transform.position)).ToArray();
         foreach (Collider col in rangeChecks)
@@ -55,7 +56,7 @@ public class FOV : MonoBehaviour
             if (Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask)) continue;
 
             currentBoidOnSight = true;
-            VisibleTarget = target;
+            _visibleTargets.Add(target);
             break;
         }
         BoidOnSight = currentBoidOnSight;
@@ -73,13 +74,16 @@ public class FOV : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + fovLine1 * settings.DetectionRange);
         Gizmos.DrawLine(transform.position, transform.position + fovLine2 * settings.DetectionRange);
 
-        if (BoidOnSight && VisibleTarget != null)
+        if (BoidOnSight && NearestTarget != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, VisibleTarget.position);
+            Gizmos.DrawLine(transform.position, NearestTarget.position);
         }
     }
-
+    public void RemoveTarget(Transform target)
+    {
+        _visibleTargets.Remove(target);
+    }
     private Vector3 DirectionFromAngle(float eulerY, float angleInDegrees)
     {
         angleInDegrees += eulerY;

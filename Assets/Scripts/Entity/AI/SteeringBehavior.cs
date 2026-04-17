@@ -22,7 +22,7 @@ public class SteeringBehavior
     public Vector3 Arrive(Vector3 targetPosition, float maxSpeed, float maxAcceleration, float slowingRadius)
     {
         Vector3 toTarget = targetPosition - Position;
-        toTarget.y = 0f; 
+        toTarget.y = 0f;
         float distance = toTarget.magnitude;
 
         if (distance < 0.15f) return Vector3.zero;

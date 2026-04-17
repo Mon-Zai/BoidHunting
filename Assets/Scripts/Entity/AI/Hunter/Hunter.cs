@@ -4,11 +4,12 @@ public class Hunter : Entity
 {
     [SerializeField] private HunterSettings _settings;
     public HunterSettings Settings => _settings;
-    public float Stamina;
+    [SerializeField] private float _stamina;
+    public float Stamina => _stamina;
     protected override void Awake()
     {
         base.Awake();
-        Stamina = _settings.MaxStamina;
+        _stamina = _settings.MaxStamina;
     }
     protected override void Update()
     {
@@ -23,6 +24,7 @@ public class Hunter : Entity
         _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
         Vector3 newVelocity = _velocity + _acceleration * Time.deltaTime;
         newVelocity = Vector3.ClampMagnitude(newVelocity, _settings.MaxSpeed);
+        newVelocity *= 1f - _settings.linearDrag;
         _velocity = newVelocity;
         transform.position += _velocity * Time.deltaTime;
         _acceleration = Vector3.zero;
@@ -38,5 +40,22 @@ public class Hunter : Entity
     {
         base.ApplyForce(force);
         _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
+    }
+    public void Stop()
+    {
+        _velocity = Vector3.zero;
+        _acceleration = Vector3.zero;
+    }
+    public void ConsumeStamina(float amount = 0f, float rateMultiplier = 1f)
+    {
+        if (_stamina <= 0f) return;
+        _stamina -= amount * rateMultiplier;
+        _stamina = Mathf.Clamp(_stamina, 0f, _settings.MaxStamina);
+    }
+    public void RegenerateStamina(float amount = 0f, float rateMultiplier = 1f)
+    {
+        if (_stamina >= _settings.MaxStamina) return;
+        _stamina += amount * rateMultiplier;
+        _stamina = Mathf.Clamp(_stamina, 0f, _settings.MaxStamina);
     }
 }

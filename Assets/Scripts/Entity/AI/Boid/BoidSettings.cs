@@ -3,6 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BoidSettings", menuName = "AI/Boid Settings")]
 public class BoidSettings : AISettings
 {
+    [Header("Food")]
+    public float ConsumeRadius = 1.5f;
     [Header("Hunted")]
     public float persuedCooldown = 5f;
     [Header("Steering")]

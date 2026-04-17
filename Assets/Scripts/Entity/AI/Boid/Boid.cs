@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Boid : Entity
@@ -7,8 +8,10 @@ public class Boid : Entity
     private float currentPersuedCooldown = 0f;
     [SerializeField] private BoidSettings _settings;
     public BoidSettings Settings => _settings;
-    public GameObject Food;
-    public Hunter HunterTarget;
+    private HashSet<Food> _foods = new();
+    private Hunter _hunterTarget;
+    public Hunter HunterTarget => _hunterTarget;
+    public Food FoodTarget => _foods.OrderBy(f => Vector3.Distance(transform.position, f.transform.position)).FirstOrDefault();
     public bool NeighborsInRange => manager.GetNeighbors(this, Settings.NeighborRadius).Count > 0;
     public void Init(BoidManager boidManager)
     {
@@ -18,7 +21,8 @@ public class Boid : Entity
     {
         base.Update();
         PursuedTimer();
-
+        EatFood();
+        manager.CheckBounds(this);
     }
     void FixedUpdate()
     {
@@ -29,6 +33,7 @@ public class Boid : Entity
         _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
         Vector3 newVelocity = _velocity + _acceleration * Time.deltaTime;
         newVelocity = Vector3.ClampMagnitude(newVelocity, _settings.MaxSpeed);
+        newVelocity *= 1f - _settings.linearDrag;
         _velocity = newVelocity;
         transform.position += _velocity * Time.deltaTime;
         _acceleration = Vector3.zero;
@@ -40,7 +45,7 @@ public class Boid : Entity
             currentPersuedCooldown -= Time.deltaTime;
             if (currentPersuedCooldown <= 0f)
             {
-                HunterTarget = null;
+                _hunterTarget = null;
             }
         }
     }
@@ -48,11 +53,33 @@ public class Boid : Entity
     {
         return manager.GetNeighbors(this, Settings.NeighborRadius);
     }
+    public void AddFoodTarget(Food food)
+    {
+        _foods.Add(food);
+    }
+    public void EatFood()
+    {
+        Food foodTarget = FoodTarget;
+        if(foodTarget == null) return;
+        if (Vector3.Distance(transform.position, foodTarget.transform.position) <= Settings.ConsumeRadius)
+        {
+            foodTarget.BeConsumed();
+        }
+    }
+    public void RemoveFoodTarget(Food food)
+    {
+        _foods.Remove(food);
+    }
     public void SetHunterTarget(Hunter hunter)
     {
-        HunterTarget = hunter;
+        _hunterTarget = hunter;
         currentPersuedCooldown = Settings.persuedCooldown;
     }
+    public void GetCaught()
+    {
+        manager.RemoveBoid(this);
+    }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
@@ -63,19 +90,17 @@ public class Boid : Entity
         Gizmos.DrawWireSphere(transform.position, Settings.WanderRadius);
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, Settings.SeparationRadius);
-        if (Food != null)
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, Settings.ConsumeRadius);
+        if (FoodTarget != null)
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, Food.transform.position);
+            Gizmos.DrawLine(transform.position, FoodTarget.transform.position);
         }
         if (HunterTarget != null)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, HunterTarget.transform.position);
         }
-    }
-    public void GetCaught()
-    {
-        manager.RemoveBoid(this);
     }
 }

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxSpeed: 30
   MaxAcceleration: 25
-  SlowingRadius: 8
+  SlowingRadius: 30
+  linearDrag: 0.01
   PursuePredictionTime: 1
   EvadePredictionTime: 1
   ObstacleAvoidanceDistance: 10

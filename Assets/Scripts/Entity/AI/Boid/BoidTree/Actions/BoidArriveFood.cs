@@ -12,11 +12,11 @@ public class BoidArriveFood : ActionNode
 
     protected override void PerformAction()
     {
-        if (boid.Food != null)
+        if (boid.FoodTarget != null)
         {
             Vector3 arriveForce = steering
                                 .Arrive(
-                                boid.Food.transform.position,
+                                boid.FoodTarget.transform.position,
                                 boid.Settings.MaxSpeed,
                                 boid.Settings.MaxAcceleration,
                                 boid.Settings.SlowingRadius

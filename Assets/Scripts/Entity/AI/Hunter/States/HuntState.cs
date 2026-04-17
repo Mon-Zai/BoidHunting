@@ -14,14 +14,11 @@ public class HuntState : HunterBaseState
     public override void OnEnter()
     {
         base.OnEnter();
-        if (fov.VisibleTarget.TryGetComponent(out Boid boid))
-        {
-            _boid = boid;
-        }
     }
     public override void Update()
     {
         base.Update();
+        hunter.ConsumeStamina(hunter.Settings.StaminaConsumptionRate, Time.deltaTime);
     }
     public override void FixedUpdate()
     {
@@ -30,14 +27,20 @@ public class HuntState : HunterBaseState
     }
     private void Chase()
     {
+        if (fov.NearestTarget != null && fov.NearestTarget.TryGetComponent(out Boid boid))
+        {
+            _boid = boid;
+        }
         if (!fov.BoidOnSight || _boid == null) return;
         Vector3 steeringForce = Vector3.zero;
         float boidDistance = Vector3.Distance(hunter.transform.position, _boid.transform.position);
         if (boidDistance <= hunter.Settings.KillRange)
         {
             Debug.Log("Boid Caught!");
+            fov.RemoveTarget(_boid.transform);
             _boid.GetCaught();
             _boid = null;
+            hunter.ConsumeStamina(hunter.Settings.KillStaminaCost);
         }
         else if (boidDistance <= hunter.Settings.SlowingRadius / 2)
         {
