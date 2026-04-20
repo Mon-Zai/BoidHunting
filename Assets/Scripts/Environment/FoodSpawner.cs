@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class FoodSpawner : MonoBehaviour
 {
+    [Header("Spawn Settings")]
     [SerializeField] private GameObject _foodPrefab;
     [SerializeField] private float _spawnRadius = 10f;
     [SerializeField] private float _spawnInterval = 5f;
+    [Header("Obstacle Check")]
+    [SerializeField] private LayerMask _obstacleLayer;
+    [SerializeField] private float _checkRadius = 3.5f;
     private float _timer;
+    private Vector3 _spawnPos;
 
     void Update()
     {
@@ -19,16 +24,22 @@ public class FoodSpawner : MonoBehaviour
 
     private void SpawnFood()
     {
-        Vector3 spawnPosition = transform.position + new Vector3(
+        _spawnPos = transform.position + new Vector3(
             Random.Range(-_spawnRadius, _spawnRadius),
             3.6f,
             Random.Range(-_spawnRadius, _spawnRadius)
         );
-        Instantiate(_foodPrefab, spawnPosition, Quaternion.identity);
+        if (!Physics.CheckSphere(_spawnPos, _checkRadius, _obstacleLayer))
+        {
+            Instantiate(_foodPrefab, _spawnPos, Quaternion.identity);
+        }
     }
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, _spawnRadius);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_spawnPos, _checkRadius);
     }
 }

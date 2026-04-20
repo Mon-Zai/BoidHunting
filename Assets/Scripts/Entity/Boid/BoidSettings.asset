@@ -18,10 +18,10 @@ MonoBehaviour:
   linearDrag: 0.01
   PursuePredictionTime: 1
   EvadePredictionTime: 1
-  ObstacleAvoidanceDistance: 10
+  ObstacleAvoidanceDistance: 5
   ObstacleAvoidanceWeight: 25
   ObstacleAvoidanceAngle: 25
-  ConsumeRadius: 1.5
+  ConsumeRadius: 2.5
   persuedCooldown: 5
   WanderRadius: 1
   WanderDistance: 1

@@ -150,7 +150,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _foodPrefab: {fileID: 1952067098551397867, guid: e1f37f205553ae04ba0a0e74b1fafac0, type: 3}
   _spawnRadius: 192
-  _spawnInterval: 5
+  _spawnInterval: 1
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!4 &84787496
 Transform:
   m_ObjectHideFlags: 0
