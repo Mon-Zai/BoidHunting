@@ -27,7 +27,9 @@ public class HuntState : HunterBaseState
     }
     private void Chase()
     {
-        if (fov.NearestTarget != null && fov.NearestTarget.TryGetComponent(out Boid boid))
+        if (fov.NearestTarget != null
+         && fov.NearestTarget.gameObject.activeInHierarchy
+         && fov.NearestTarget.TryGetComponent(out Boid boid))
         {
             _boid = boid;
         }

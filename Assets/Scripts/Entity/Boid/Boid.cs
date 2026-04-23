@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class Boid : Entity
     public Hunter HunterTarget => _hunterTarget;
     public Food FoodTarget => _foods.OrderBy(f => Vector3.Distance(transform.position, f.transform.position)).FirstOrDefault();
     public bool NeighborsInRange => manager.GetNeighbors(this, Settings.NeighborRadius).Count > 0;
+    public event Action<Boid> OnCaught;
     public void Init(BoidManager boidManager)
     {
         manager = boidManager;
@@ -60,7 +62,7 @@ public class Boid : Entity
     public void EatFood()
     {
         Food foodTarget = FoodTarget;
-        if(foodTarget == null) return;
+        if (foodTarget == null) return;
         if (Vector3.Distance(transform.position, foodTarget.transform.position) <= Settings.ConsumeRadius)
         {
             foodTarget.BeConsumed();
@@ -78,8 +80,14 @@ public class Boid : Entity
     public void GetCaught()
     {
         manager.RemoveBoid(this);
+        OnCaught?.Invoke(this);
     }
-
+    public override void Reset()
+    {
+        _hunterTarget = null;
+        _foods.Clear();
+        base.Reset();
+    }
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

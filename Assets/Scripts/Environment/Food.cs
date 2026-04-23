@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Food : MonoBehaviour
+public class Food : MonoBehaviour, IResetable
 {
     [SerializeField] private float _detectionRadius = 5f;
     [SerializeField] private LayerMask _boidLayer;
@@ -18,7 +18,6 @@ public class Food : MonoBehaviour
                 _boidsInRange.Add(boid);
             }
         }
-
     }
     public void BeConsumed()
     {
@@ -26,11 +25,22 @@ public class Food : MonoBehaviour
         {
             boid.RemoveFoodTarget(this);
         }
-        Destroy(gameObject);
     }
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, _detectionRadius);
     }
+    public void Reset()
+    {
+        _boidsInRange.Clear();
+    }
+    public static void TurnOnOff(Food food, bool active = true)
+    {
+        if (food == null) return;
+
+        if (active) food.Reset();
+        food.gameObject.SetActive(active);
+    }
+
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour, IResetable
 {
     protected float health;
     protected Vector3 _acceleration;
@@ -23,4 +23,15 @@ public abstract class Entity : MonoBehaviour
         _acceleration += force;
     }
 
+    public virtual void Reset()
+    {
+        Debug.Log("Entity Spawned, Stats got reset");
+    }
+    public static void TurnOnOff(Entity entity, bool active = true)
+    {
+        if (entity == null) return;
+
+        if (active) entity.Reset();
+        entity.gameObject.SetActive(active);
+    }
 }

@@ -154,6 +154,7 @@ MonoBehaviour:
   _obstacleLayer:
     serializedVersion: 2
     m_Bits: 8
+  _checkRadius: 3.5
 --- !u!4 &84787496
 Transform:
   m_ObjectHideFlags: 0
@@ -2674,6 +2675,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3917496073877088755, guid: 93106e73ad608fc4682b97c4e59ae539, type: 3}
+      propertyPath: _patrolWaypoints.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3917496073877088755, guid: 93106e73ad608fc4682b97c4e59ae539, type: 3}
+      propertyPath: '_patrolWaypoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1660514153}
+    - target: {fileID: 3917496073877088755, guid: 93106e73ad608fc4682b97c4e59ae539, type: 3}
+      propertyPath: '_patrolWaypoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 262947661}
+    - target: {fileID: 3917496073877088755, guid: 93106e73ad608fc4682b97c4e59ae539, type: 3}
+      propertyPath: '_patrolWaypoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 335673986}
+    - target: {fileID: 3917496073877088755, guid: 93106e73ad608fc4682b97c4e59ae539, type: 3}
+      propertyPath: '_patrolWaypoints.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1290041112}
     - target: {fileID: 4346884228957599793, guid: 93106e73ad608fc4682b97c4e59ae539, type: 3}
       propertyPath: m_LocalPosition.x
       value: -20.40898

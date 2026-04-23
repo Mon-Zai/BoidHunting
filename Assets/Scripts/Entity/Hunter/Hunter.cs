@@ -3,13 +3,18 @@ using UnityEngine;
 public class Hunter : Entity
 {
     [SerializeField] private HunterSettings _settings;
-    public HunterSettings Settings => _settings;
+    [SerializeField] private Transform[] _patrolWaypoints;
     [SerializeField] private float _stamina;
+    private FOV _fov;
+    public HunterSettings Settings => _settings;
+    public Transform[] PatrolWaypoints => _patrolWaypoints;
     public float Stamina => _stamina;
+    public FOV FOV => _fov;
     protected override void Awake()
     {
         base.Awake();
         _stamina = _settings.MaxStamina;
+        _fov = GetComponent<FOV>();
     }
     protected override void Update()
     {
@@ -57,5 +62,14 @@ public class Hunter : Entity
         if (_stamina >= _settings.MaxStamina) return;
         _stamina += amount * rateMultiplier;
         _stamina = Mathf.Clamp(_stamina, 0f, _settings.MaxStamina);
+    }
+    public void SetPatrolWaypoints(Transform[] waypoints)
+    {
+        _patrolWaypoints = waypoints;
+    }
+    public override void Reset()
+    {
+        _stamina = _settings.MaxStamina;
+        base.Reset();
     }
 }

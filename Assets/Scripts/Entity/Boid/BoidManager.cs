@@ -4,41 +4,9 @@ using UnityEngine;
 public class BoidManager : MonoBehaviour
 {
     [SerializeField] private Boid boidPrefab;
-    [SerializeField] private int boidCount = 50;
-    [SerializeField] private Vector3 spawnBounds = new Vector3(20, 20, 20);
     [SerializeField] private float _width;
     [SerializeField] private float _height;
-    public float Width => _width;
-    public float Height => _height;
-
     private List<Boid> allBoids = new List<Boid>();
-
-    void Start()
-    {
-        SpawnFlock();
-    }
-    private void SpawnFlock()
-    {
-        if (boidPrefab == null)
-        {
-            Debug.LogWarning("BoidManager needs both a boid prefab and boid settings assigned.", this);
-            return;
-        }
-
-        for (int i = 0; i < boidCount; i++)
-        {
-            Vector3 randomPos = new Vector3(
-                Random.Range(-spawnBounds.x, spawnBounds.x),
-                3.6f,
-                Random.Range(-spawnBounds.z, spawnBounds.z)
-            );
-
-            Boid boid = Instantiate(boidPrefab, randomPos, Quaternion.identity, transform);
-            boid.Init(this);
-            allBoids.Add(boid);
-        }
-    }
-
     public List<Boid> GetNeighbors(Boid currentBoid, float radius)
     {
         List<Boid> neighbors = new List<Boid>();
@@ -58,12 +26,19 @@ public class BoidManager : MonoBehaviour
 
         return neighbors;
     }
+    public void AddBoid(Boid boid)
+    {
+        if (!allBoids.Contains(boid))
+        {
+            allBoids.Add(boid);
+        }
+    }
     public void RemoveBoid(Boid boid)
     {
         if (allBoids.Contains(boid))
         {
             allBoids.Remove(boid);
-            Destroy(boid.gameObject);
+            //Destroy(boid.gameObject);
         }
     }
     public void CheckBounds(Boid boid)

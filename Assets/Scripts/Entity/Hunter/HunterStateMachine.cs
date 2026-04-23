@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 public enum HunterState
 {
@@ -9,25 +8,23 @@ public enum HunterState
 public class HunterStateMachine : MonoBehaviour
 {
     private Hunter hunter;
-    private FOV _fov;
     private StateMachine<HunterState> _stateMachine;
     //States
     private IState _idleState;
     private IState _patrolState;
     private IState _huntState;
-    [SerializeField] private Transform[] _patrolWaypoints;
     private SteeringBehavior _steering;
-
+    
     void Awake()
     {
         hunter = GetComponent<Hunter>();
-        _fov = GetComponent<FOV>();
+        FOV fov = GetComponent<FOV>(); // Getting FOV directly because hunter fov is being exposed but loads after state machine so it causes a null reference if we try to inject it through the constructor
         _stateMachine = new StateMachine<HunterState>();
         _steering = new SteeringBehavior(hunter);
 
         _idleState = new IdleState(hunter);
-        _patrolState = new PatrolState(hunter, _patrolWaypoints, _steering, _fov);
-        _huntState = new HuntState(hunter, _steering, _fov);
+        _patrolState = new PatrolState(hunter, hunter.PatrolWaypoints, _steering, fov);
+        _huntState = new HuntState(hunter, _steering, fov);
 
         _stateMachine.AddState(HunterState.Idle, _idleState);
         _stateMachine.AddState(HunterState.Patrol, _patrolState);
@@ -48,9 +45,9 @@ public class HunterStateMachine : MonoBehaviour
     {
         IPredicate isTired = new SimplePredicate(() => hunter.Stamina <= 0f);
         IPredicate isRested = new SimplePredicate(() => hunter.Stamina >= hunter.Settings.MaxStamina);
-        IPredicate hasWaypoints = new SimplePredicate(() => _patrolWaypoints.Length > 0);
-        IPredicate seesPrey = new SimplePredicate(() => _fov.BoidOnSight);
-        IPredicate lostPrey = new SimplePredicate(() => !_fov.BoidOnSight);
+        IPredicate hasWaypoints = new SimplePredicate(() => hunter.PatrolWaypoints.Length > 0);
+        IPredicate seesPrey = new SimplePredicate(() => hunter.FOV.BoidOnSight);
+        IPredicate lostPrey = new SimplePredicate(() => !hunter.FOV.BoidOnSight);
 
         StateTransition<HunterState> idleToPatrol = new StateTransition<HunterState>(HunterState.Patrol)
         .SetPredicate(new AndPredicate(isRested, hasWaypoints));
