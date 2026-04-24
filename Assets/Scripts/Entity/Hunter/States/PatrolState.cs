@@ -7,7 +7,7 @@ public class PatrolState : HunterBaseState
     int currentWaypointIndex = 0;
     float _distanceToWaypoint;
     SteeringBehavior steering;
-    public PatrolState(Hunter hunter, Transform[] patrolWaypoints, SteeringBehavior steering, FOV fov)
+    public PatrolState(Hunter hunter, Transform[] patrolWaypoints, SteeringBehavior steering)
     : base(hunter)
     {
         this.patrolWaypoints = patrolWaypoints;
@@ -34,6 +34,12 @@ public class PatrolState : HunterBaseState
     }
     public void Patrol()
     {
+        if (patrolWaypoints != hunter.PatrolPoint.PatrolWaypoints)
+        {
+            patrolWaypoints = hunter.PatrolPoint.PatrolWaypoints;
+            currentWaypointIndex = 0;
+            _distanceToWaypoint = float.MaxValue;
+        }
         if (patrolWaypoints.Length == 0) return;
         Vector3 targetPosition = patrolWaypoints[currentWaypointIndex].position;
         Vector3 steeringForce = steering.Arrive(targetPosition, hunter.Settings.MaxSpeed, hunter.Settings.MaxAcceleration, hunter.Settings.SlowingRadius);

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Boid : Entity
+public class Boid : AIEntity<BoidSettings>
 {
     private BoidManager manager;
     private float currentPersuedCooldown = 0f;
-    [SerializeField] private BoidSettings _settings;
     public BoidSettings Settings => _settings;
     private HashSet<Food> _foods = new();
     private Hunter _hunterTarget;
@@ -25,20 +24,6 @@ public class Boid : Entity
         PursuedTimer();
         EatFood();
         manager.CheckBounds(this);
-    }
-    void FixedUpdate()
-    {
-        CalculateMovement();
-    }
-    void CalculateMovement()
-    {
-        _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
-        Vector3 newVelocity = _velocity + _acceleration * Time.deltaTime;
-        newVelocity = Vector3.ClampMagnitude(newVelocity, _settings.MaxSpeed);
-        newVelocity *= 1f - _settings.linearDrag;
-        _velocity = newVelocity;
-        transform.position += _velocity * Time.deltaTime;
-        _acceleration = Vector3.zero;
     }
     private void PursuedTimer()
     {

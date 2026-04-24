@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Pool;
 
-public class Food : MonoBehaviour, IResetable
+public class Food : MonoBehaviour, IResetable, IPoolable
 {
     [SerializeField] private float _detectionRadius = 5f;
     [SerializeField] private LayerMask _boidLayer;
     private HashSet<Boid> _boidsInRange = new();
+    public event Action<Food> OnConsumed;
     void FixedUpdate()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, _detectionRadius, _boidLayer);
@@ -25,6 +28,7 @@ public class Food : MonoBehaviour, IResetable
         {
             boid.RemoveFoodTarget(this);
         }
+        OnConsumed?.Invoke(this);
     }
     void OnDrawGizmosSelected()
     {
@@ -35,12 +39,6 @@ public class Food : MonoBehaviour, IResetable
     {
         _boidsInRange.Clear();
     }
-    public static void TurnOnOff(Food food, bool active = true)
-    {
-        if (food == null) return;
-
-        if (active) food.Reset();
-        food.gameObject.SetActive(active);
-    }
-
+    public virtual void OnGetFromPool() { Reset(); gameObject.SetActive(true); }
+    public virtual void OnReturnToPool() { gameObject.SetActive(false); }
 }

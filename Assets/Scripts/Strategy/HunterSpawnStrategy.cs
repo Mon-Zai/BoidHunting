@@ -3,24 +3,21 @@ using UnityEngine;
 public class HunterSpawnStrategy : ISpawnStrategy
 {
     private ObjectPool<Hunter> _hunterPool = null;
-    private Transform[] _waypoints = null;
-    public HunterSpawnStrategy(ObjectPool<Hunter> hunterPool)
+    private LayerMask _spawnLayer;
+    public HunterSpawnStrategy(ObjectPool<Hunter> hunterPool, LayerMask spawnLayer)
     {
         _hunterPool = hunterPool;
+        _spawnLayer = spawnLayer;
     }
     public void Spawn(Vector3 position)
     {
-        if(_waypoints == null)
-        {
-            Debug.LogError("Waypoints not set for HunterSpawnStrategy");
-            return;
-        }
         Hunter hunter = _hunterPool.GetObject();
-        hunter.SetPatrolWaypoints(_waypoints);
+        position.y += 3.6f;
         hunter.transform.position = position;
     }
-    public void SetWaypoints(Transform[] waypoints)
+
+    public LayerMask SpawnLayer()
     {
-        _waypoints = waypoints;
+        return _spawnLayer;
     }
 }

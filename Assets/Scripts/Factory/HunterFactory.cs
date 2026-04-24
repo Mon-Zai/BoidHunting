@@ -7,9 +7,4 @@ public class HunterFactory : Factory<Hunter>
         _prefab = prefab;
         _parent = parent;
     }
-    public override Hunter Create()
-    {
-        var hunter = base.Create();
-        return hunter;
-    }
 }

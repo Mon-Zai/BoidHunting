@@ -1,45 +1,23 @@
 using UnityEngine;
 
-public class Hunter : Entity
+public class Hunter : AIEntity<HunterSettings>
 {
-    [SerializeField] private HunterSettings _settings;
-    [SerializeField] private Transform[] _patrolWaypoints;
+    [SerializeField] private LayerMask _patrolLayer;
+    [SerializeField] private PatrolPoint _patrolPoint;
     [SerializeField] private float _stamina;
     private FOV _fov;
     public HunterSettings Settings => _settings;
-    public Transform[] PatrolWaypoints => _patrolWaypoints;
     public float Stamina => _stamina;
     public FOV FOV => _fov;
-    protected override void Awake()
+    public PatrolPoint PatrolPoint => _patrolPoint;
+    void Awake()
     {
-        base.Awake();
         _stamina = _settings.MaxStamina;
         _fov = GetComponent<FOV>();
     }
     protected override void Update()
     {
         base.Update();
-    }
-    void FixedUpdate()
-    {
-        CalculateMovement();
-    }
-    void CalculateMovement()
-    {
-        _acceleration = Vector3.ClampMagnitude(_acceleration, _settings.MaxAcceleration);
-        Vector3 newVelocity = _velocity + _acceleration * Time.deltaTime;
-        newVelocity = Vector3.ClampMagnitude(newVelocity, _settings.MaxSpeed);
-        newVelocity *= 1f - _settings.linearDrag;
-        _velocity = newVelocity;
-        transform.position += _velocity * Time.deltaTime;
-        _acceleration = Vector3.zero;
-    }
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, Settings.SlowingRadius);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, Settings.KillRange);
     }
     public override void ApplyForce(Vector3 force)
     {
@@ -63,13 +41,28 @@ public class Hunter : Entity
         _stamina += amount * rateMultiplier;
         _stamina = Mathf.Clamp(_stamina, 0f, _settings.MaxStamina);
     }
-    public void SetPatrolWaypoints(Transform[] waypoints)
+    public Transform[] UpdatePatrolWaypoints()
     {
-        _patrolWaypoints = waypoints;
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10f, _patrolLayer))
+        {
+            PatrolPoint patrolPoint = hit.collider.GetComponent<PatrolPoint>();
+            if (patrolPoint != null)
+            {
+                _patrolPoint = patrolPoint;
+            }
+        }
+        return _patrolPoint != null ? _patrolPoint.PatrolWaypoints : new Transform[0];
     }
     public override void Reset()
     {
         _stamina = _settings.MaxStamina;
         base.Reset();
+    }
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, Settings.SlowingRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, Settings.KillRange);
     }
 }
