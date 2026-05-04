@@ -38,7 +38,6 @@ public class BoidManager : MonoBehaviour
         if (allBoids.Contains(boid))
         {
             allBoids.Remove(boid);
-            //Destroy(boid.gameObject);
         }
     }
     public void CheckBounds(Boid boid)

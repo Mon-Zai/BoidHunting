@@ -10,8 +10,10 @@ public class Hunter : AIEntity<HunterSettings>
     public float Stamina => _stamina;
     public FOV FOV => _fov;
     public PatrolPoint PatrolPoint => _patrolPoint;
-    void Awake()
+    public Transform CurrentPatrolTarget {get; set;}
+    protected override void Awake()
     {
+        base.Awake();
         _stamina = _settings.MaxStamina;
         _fov = GetComponent<FOV>();
     }

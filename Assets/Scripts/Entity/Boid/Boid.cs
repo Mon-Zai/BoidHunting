@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Boid : AIEntity<BoidSettings>
 {
+
     private BoidManager manager;
     private float currentPersuedCooldown = 0f;
     public BoidSettings Settings => _settings;
@@ -14,6 +15,7 @@ public class Boid : AIEntity<BoidSettings>
     public Food FoodTarget => _foods.OrderBy(f => Vector3.Distance(transform.position, f.transform.position)).FirstOrDefault();
     public bool NeighborsInRange => manager.GetNeighbors(this, Settings.NeighborRadius).Count > 0;
     public event Action<Boid> OnCaught;
+
     public void Init(BoidManager boidManager)
     {
         manager = boidManager;

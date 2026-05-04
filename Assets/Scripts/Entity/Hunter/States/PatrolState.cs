@@ -47,39 +47,35 @@ public class PatrolState : HunterBaseState
         _distanceToWaypoint = Vector3.Distance(hunter.transform.position, new Vector3(targetPosition.x, hunter.transform.position.y, targetPosition.z));
         CheckWaypointDistance();
     }
-    private void RandomReverse()
-    {
-        if (Random.value < 0.5f)
-        {
-            isReversing = !isReversing;
-            Debug.Log("Hunter reversed patrol direction: " + isReversing);
-        }
-        else
-        {
-            Debug.Log("Hunter continues in the same patrol direction: " + isReversing);
-        }
-
-    }
     private void CheckWaypointDistance()
     {
         if (_distanceToWaypoint < 0.5f)
         {
             if (!isReversing)
             {
-                currentWaypointIndex = (currentWaypointIndex + 1) % patrolWaypoints.Length;
-                if (currentWaypointIndex == 0)
+                if (currentWaypointIndex >= patrolWaypoints.Length - 1)
                 {
-                    RandomReverse();
+                    isReversing = true;
+                    currentWaypointIndex--;
+                }
+                else
+                {
+                    currentWaypointIndex++;
                 }
             }
             else
             {
-                currentWaypointIndex = (currentWaypointIndex - 1 + patrolWaypoints.Length) % patrolWaypoints.Length;
-                if (currentWaypointIndex == patrolWaypoints.Length - 1)
+                if (currentWaypointIndex <= 0)
                 {
-                    RandomReverse();
+                    isReversing = false;
+                    currentWaypointIndex++;
+                }
+                else
+                {
+                    currentWaypointIndex--;
                 }
             }
+            hunter.CurrentPatrolTarget = patrolWaypoints[currentWaypointIndex];
         }
     }
 }
