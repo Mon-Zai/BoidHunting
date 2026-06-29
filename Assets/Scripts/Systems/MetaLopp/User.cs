@@ -21,6 +21,10 @@ public class User : MonoBehaviour
     public void AddEnergy(int amount)
     {
         _energy = Mathf.Min(_energy + amount, _maxEnergy);
+        if (_energy == _maxEnergy)
+        {
+            SetTimeToNextEnergy(0);
+        }
         OnEnergyChanged?.Invoke(_energy);
     }
     public void SubtractEnergy(int amount)
@@ -58,5 +62,36 @@ public class User : MonoBehaviour
     public int GetTimeToNextEnergy()
     {
         return timeToNextEnergy;
+    }
+    public UserData ToData()
+    {
+        return new UserData
+        {
+            UserName = _userName,
+            Energy = _energy,
+            MaxEnergy = _maxEnergy,
+            Currency = _currency,
+            CurrentLevel = _currentLevel,
+            TimeToNextEnergy = timeToNextEnergy
+        };
+    }
+
+    public void LoadFromData(UserData data, bool notifyEvents = true)
+    {
+        if (data == null) return;
+
+        _userName = data.UserName;
+        _energy = data.Energy;
+        _maxEnergy = data.MaxEnergy;
+        _currency = data.Currency;
+        _currentLevel = data.CurrentLevel;
+        timeToNextEnergy = data.TimeToNextEnergy;
+
+        if (notifyEvents)
+        {
+            OnEnergyChanged?.Invoke(_energy);
+            OnCurrencyChanged?.Invoke(_currency);
+            OnTimeToNextEnergyChanged?.Invoke(timeToNextEnergy);
+        }
     }
 }

@@ -8,5 +8,5 @@ public class UserData
     public int MaxEnergy;
     public int Currency;
     public int CurrentLevel;
-    public int timeToNextEnergy;
+    public int TimeToNextEnergy;
 }

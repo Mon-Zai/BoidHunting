@@ -925,11 +925,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 7cdcc995-fe18-4f38-b601-42705d6b64ce
+  cloudProjectId: 93f9f625-caa4-458a-a767-db7ac9adfe58
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: IA_Parcial_1
-  organizationId: godzai
+  projectName: MobileTP
+  organizationId: unity_3e53e7ae7257fa685246
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
