@@ -4,11 +4,22 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SharedMenu", menuName = "ScriptableObjects/Menu", order = 1)]
 public class SharedMenu : ScriptableObject
 {
+    
     public Action OnPlayAction;
     public void Subscribe(Action listener) => OnPlayAction += listener;
     public void Unsubscribe(Action listener) => OnPlayAction -= listener;
+
+    private User _user;
+    public void SetUser(User user)
+    {
+        _user = user;
+    }
     public void OnPlayButton()
     {
+        if(_user.GetEnergy() <= 0)
+        {
+            return;
+        }
         Time.timeScale = 1f;
         OnPlayAction?.Invoke();
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);

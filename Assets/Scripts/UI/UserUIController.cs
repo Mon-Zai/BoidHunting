@@ -33,7 +33,7 @@ public class UserUIController : MonoBehaviour
 
     private void UpdateEnergyText(int energy)
     {
-        _userUI.SetEnergyText(energy);
+        _userUI.SetEnergyText(energy, _user.GetMaxEnergy());
     }
 
     private void UpdateCurrencyText(int currency)

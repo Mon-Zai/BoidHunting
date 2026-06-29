@@ -6,6 +6,8 @@ public class UserController : MonoBehaviour
     [SerializeField] private VictoryCondition _victoryCondition;
     [SerializeField] private SharedMenu _sharedMenu;
     [SerializeField] private int _energyTimeInSeconds = 60;
+    [SerializeField] private int _playEnergyCost = 1;
+
     private EnergyHandler _energyHandler;
     private void Start()
     {
@@ -22,6 +24,16 @@ public class UserController : MonoBehaviour
     }
     public void SubstractEnergyDefault()
     {
-        _user.SubtractEnergy(1);
+        _user.SubtractEnergy(_playEnergyCost);
+    }
+    public void SetEnergyRegenerationSeconds(int seconds)
+    {
+        _energyTimeInSeconds = Mathf.Max(1, seconds);
+        _energyHandler = new EnergyHandler(_user, _energyTimeInSeconds);
+    }
+
+    public void SetPlayEnergyCost(int cost)
+    {
+        _playEnergyCost = Mathf.Max(0, cost);
     }
 }

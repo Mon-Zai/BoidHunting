@@ -3,7 +3,7 @@ using UnityEngine;
 public class PersistentRoot : MonoBehaviour
 {
     [SerializeField] private UserController _userController;
-    [SerializeField] private User _user;
+    [SerializeField] public User User;
     [SerializeField] private SharedMenu _sharedMenu;
 
     public static PersistentRoot Instance { get; private set; }
@@ -18,17 +18,19 @@ public class PersistentRoot : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             _userController = GetComponentInChildren<UserController>();
-            _user = GetComponentInChildren<User>();
-            _sharedMenu = Resources.Load<SharedMenu>("SharedMenu");
+            User = GetComponentInChildren<User>();
+            //_sharedMenu = Resources.Load<SharedMenu>("SharedMenu");
 
-            if (_user == null)
+            if (User == null)
             {
                 Debug.LogError("PersistentRoot: User component not found in children.");
                 return;
             }
+            
+            _sharedMenu.SetUser(User);
 
             _isApplyingLoadedData = true;
-            UserSaveSystem.TryLoad(_user);
+            UserSaveSystem.TryLoad(User);
             _isApplyingLoadedData = false;
         }
         else
@@ -39,45 +41,45 @@ public class PersistentRoot : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_user == null) return;
+        if (User == null) return;
 
-        _user.OnEnergyChanged += HandleEnergyChanged;
-        _user.OnCurrencyChanged += HandleCurrencyChanged;
+        User.OnEnergyChanged += HandleEnergyChanged;
+        User.OnCurrencyChanged += HandleCurrencyChanged;
     }
 
     private void OnDisable()
     {
-        if (_user == null) return;
+        if (User == null) return;
 
-        _user.OnEnergyChanged -= HandleEnergyChanged;
-        _user.OnCurrencyChanged -= HandleCurrencyChanged;
+        User.OnEnergyChanged -= HandleEnergyChanged;
+        User.OnCurrencyChanged -= HandleCurrencyChanged;
     }
 
     private void HandleEnergyChanged(int value)
     {
         if (_isApplyingLoadedData) return;
-        UserSaveSystem.Save(_user);
+        UserSaveSystem.Save(User);
     }
 
     private void HandleCurrencyChanged(int value)
     {
         if (_isApplyingLoadedData) return;
-        UserSaveSystem.Save(_user);
+        UserSaveSystem.Save(User);
     }
 
     private void OnApplicationPause(bool pauseStatus)
     {
-        if (pauseStatus && _user != null)
+        if (pauseStatus && User != null)
         {
-            UserSaveSystem.Save(_user);
+            UserSaveSystem.Save(User);
         }
     }
 
     private void OnApplicationQuit()
     {
-        if (_user != null)
+        if (User != null)
         {
-            UserSaveSystem.Save(_user);
+            UserSaveSystem.Save(User);
         }
     }
 }

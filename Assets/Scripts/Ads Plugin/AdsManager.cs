@@ -7,6 +7,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
     [SerializeField] private AdsInitializer _adsInitializer;
     [SerializeField] private string _androidAdUnitId = "Rewarded_Android";
     [SerializeField] private string _iOSAdUnitId = "Rewarded_iOS";
+    [SerializeField] private bool _rewardedAdsEnabled = true;
 
     public static AdsManager Instance { get; private set; }
 
@@ -37,7 +38,10 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
         _adsInitializer.OnInitializationFinished += HandleAdsInitializationFinished;
         _adsInitializer.InitializeAds();
     }
-
+    public void SetRewardedAdsEnabled(bool enabled)
+    {
+        _rewardedAdsEnabled = enabled;
+    }
     private void ResolveAdUnitId()
     {
 #if UNITY_IOS
@@ -71,6 +75,12 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
 
     public void ShowRewardedAd(Action onComplete, Action onSkipped = null, Action onFailed = null)
     {
+        if (!_rewardedAdsEnabled)
+        {
+            Debug.Log("AdsManager: rewarded ads deshabilitado por Remote Config.");
+            onFailed?.Invoke();
+            return;
+        }
         if (!_isLoaded)
         {
             Debug.LogWarning("AdsManager: El ad todavía no está listo.");
@@ -87,7 +97,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
 
     public bool IsAdReady()
     {
-        return _isLoaded;
+        return _isLoaded && _rewardedAdsEnabled;
     }
 
     // LOAD LISTENER

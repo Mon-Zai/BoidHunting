@@ -49,6 +49,7 @@ MonoBehaviour:
   _maxEnergy: 10
   _currency: 0
   _currentLevel: 1
+  timeToNextEnergy: 0
 --- !u!1 &4392865910781533670
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,6 +60,7 @@ GameObject:
   m_Component:
   - component: {fileID: 777148331804244276}
   - component: {fileID: 5099820932741705805}
+  - component: {fileID: 7852881993658050963}
   m_Layer: 0
   m_Name: UserObject
   m_TagString: Untagged
@@ -74,7 +76,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4392865910781533670}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 999.5063, y: 564.5516, z: 274.41806}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -96,8 +98,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _userController: {fileID: 0}
-  _userUI: {fileID: 0}
-  _sharedMenu: {fileID: 0}
+  _user: {fileID: 0}
+  _sharedMenu: {fileID: 11400000, guid: 0866828c78f5a534e9138ac1713a3b22, type: 2}
+--- !u!114 &7852881993658050963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4392865910781533670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60ce324b836dff8409b3234a30cc92c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _user: {fileID: 0}
+  _userController: {fileID: 0}
+  _adsManager: {fileID: 0}
+  _defaults:
+    maxEnergy: 10
+    enableRewardedAds: 1
+    energyRegenSeconds: 60
+    playEnergyCost: 1
+    victoryCurrencyReward: 1
 --- !u!1 &6989347987966317982
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,3 +168,5 @@ MonoBehaviour:
   _user: {fileID: 1918018522570502291}
   _victoryCondition: {fileID: 0}
   _sharedMenu: {fileID: 11400000, guid: 0866828c78f5a534e9138ac1713a3b22, type: 2}
+  _energyTimeInSeconds: 60
+  _playEnergyCost: 1

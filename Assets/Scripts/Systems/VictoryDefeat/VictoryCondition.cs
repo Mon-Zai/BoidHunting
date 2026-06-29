@@ -13,10 +13,16 @@ public class VictoryCondition : MonoBehaviour
     private void OnVictory()
     {
         Debug.Log("Victory!");
+        User user = PersistentRoot.Instance.User;
+        user.AddCurrency(CurrencyReward);
         OnVictoryEvent?.Invoke();
     }
     void OnDisable()
     {
         victoryEvent.Unsubscribe(OnVictory);
+    }
+    public void SetCurrencyReward(int reward)
+    {
+        CurrencyReward = Mathf.Max(0, reward);
     }
 }
