@@ -12,6 +12,8 @@ public class User : MonoBehaviour
     [SerializeField] private int timeToNextEnergy = 0;
     [SerializeField] private List<int> _ownedShopItemIds = new List<int>();
 
+    public List<int> OwnedShopItemIds => _ownedShopItemIds;
+
     public Action<int> OnEnergyChanged;
     public Action<int> OnCurrencyChanged;
     public Action<int> OnTimeToNextEnergyChanged;

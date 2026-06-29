@@ -15,6 +15,10 @@ public class ShopMenu : MonoBehaviour
             RefreshItems();
         }
     }
+    public void OnCloseClick()
+    {
+        _shopMenu.SetActive(false);
+    }
 
     public void RefreshItems()
     {

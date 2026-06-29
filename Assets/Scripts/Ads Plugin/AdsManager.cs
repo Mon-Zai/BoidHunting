@@ -6,7 +6,6 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
 {
     [SerializeField] private AdsInitializer _adsInitializer;
     [SerializeField] private string _androidAdUnitId = "Rewarded_Android";
-    [SerializeField] private string _iOSAdUnitId = "Rewarded_iOS";
     [SerializeField] private bool _rewardedAdsEnabled = true;
 
     public static AdsManager Instance { get; private set; }
