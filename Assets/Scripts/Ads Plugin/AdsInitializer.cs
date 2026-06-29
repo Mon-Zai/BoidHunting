@@ -29,7 +29,7 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
 
         if (string.IsNullOrEmpty(_gameId))
         {
-            Debug.LogError("AdsInitializer: Game ID vacío. Asignalo en el Inspector.");
+            Debug.LogError("AdsInitializer: GameID empty. Assign it in the Inspector.");
             IsInitialized = false;
             OnInitializationFinished?.Invoke(false);
             return;
@@ -38,27 +38,27 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
         if (Advertisement.isInitialized)
         {
             IsInitialized = true;
-            Debug.Log("AdsInitializer: Ya estaba inicializado.");
+            Debug.Log("AdsInitializer: Already initialized.");
             OnInitializationFinished?.Invoke(true);
             return;
         }
 
-        // Nota: isSupported puede ser false en Editor, lo ignoramos intencionalmente en dev
-        Debug.Log($"AdsInitializer: Inicializando con GameID={_gameId}, testMode={_testMode}");
+        // Note: isSupported can be false in Editor, we intentionally ignore it in dev
+        Debug.Log($"AdsInitializer: Initializing with GameID={_gameId}, testMode={_testMode}");
         Advertisement.Initialize(_gameId, _testMode, this);
     }
 
     public void OnInitializationComplete()
     {
         IsInitialized = true;
-        Debug.Log("AdsInitializer: Inicialización completa.");
+        Debug.Log("AdsInitializer: Initialization complete.");
         OnInitializationFinished?.Invoke(true);
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
     {
         IsInitialized = false;
-        Debug.LogError($"AdsInitializer: Falló: {error} - {message}");
+        Debug.LogError($"AdsInitializer: Failed: {error} - {message}");
         OnInitializationFinished?.Invoke(false);
     }
 }

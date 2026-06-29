@@ -44,6 +44,7 @@ public class Food : MonoBehaviour, IResetable, IPoolable, IInteractable
         {
             boid.RemoveFoodTarget(this);
         }
+        AudioManager.Instance.Play(AudioManager.SoundType.EAT);
         OnConsumed?.Invoke(this);
     }
     void OnDrawGizmosSelected()
@@ -70,6 +71,7 @@ public class Food : MonoBehaviour, IResetable, IPoolable, IInteractable
             isPickedUp = true;
             transform.SetParent(interactor.transform.Find("HoldPoint"));
             transform.localPosition = Vector3.zero;
+            AudioManager.Instance.Play(AudioManager.SoundType.PICKUP);
         }
     }
 }

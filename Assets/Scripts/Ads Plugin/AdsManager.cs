@@ -76,13 +76,13 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
     {
         if (!_rewardedAdsEnabled)
         {
-            Debug.Log("AdsManager: rewarded ads deshabilitado por Remote Config.");
+            Debug.Log("AdsManager: rewarded ads deactivated by remote configs.");
             onFailed?.Invoke();
             return;
         }
         if (!_isLoaded)
         {
-            Debug.LogWarning("AdsManager: El ad todavía no está listo.");
+            Debug.LogWarning("AdsManager: not totally loaded.");
             onFailed?.Invoke();
             return;
         }
@@ -105,16 +105,21 @@ public class AdsManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
         if (adUnitId != _adUnitId) return;
 
         _isLoaded = true;
-        Debug.Log("AdsManager: Ad listo.");
+        Debug.Log("AdsManager: Done.");
     }
 
-    public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
+public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
+{
+    if (adUnitId != _adUnitId) return;
+
+    _isLoaded = false;
+
+    if (error == UnityAdsLoadError.INTERNAL_ERROR || message.Contains("Network"))
     {
-        if (adUnitId != _adUnitId) return;
-
-        _isLoaded = false;
-        Debug.LogError($"AdsManager: Error cargando {adUnitId}: {error} - {message}");
+        Debug.LogWarning("AdsManager: Failed to load ad due to network error. Retrying in 5 seconds...");
+        Invoke(nameof(LoadAd), 5f);
     }
+}
 
     // SHOW LISTENER
     public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState state)

@@ -4,6 +4,12 @@ using UnityEngine.UI;
 public class PausePanel : MonoBehaviour
 {
     [SerializeField] private Button _pauseButton;
+    [SerializeField] private Toggle toggle;
+    public void CheckToggleValue()
+    {
+        AudioManager.Instance.IsSoundEnabled = toggle.isOn;
+        AudioManager.Instance.MusicSource.mute = !toggle.isOn;
+    }
 
     void OnEnable()
     {

@@ -8,6 +8,7 @@ public class Fence : MonoBehaviour, IInteractable
     {
         isOpen = !isOpen;
         _fence.SetActive(!isOpen);
+        AudioManager.Instance.Play(AudioManager.SoundType.OPENDOOR);
     }
     public void Interact(GameObject interactor)
     {
