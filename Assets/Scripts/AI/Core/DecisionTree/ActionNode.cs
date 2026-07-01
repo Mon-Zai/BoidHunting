@@ -1,9 +1,12 @@
-public abstract class ActionNode : Node
+namespace AI.DecisionTree
 {
-    public override Node MakeDecision()
+    public abstract class ActionNode : Node
     {
-        PerformAction();
-        return null;
+        public override Node MakeDecision()
+        {
+            PerformAction();
+            return null;
+        }
+        protected abstract void PerformAction();
     }
-    protected abstract void PerformAction();
 }

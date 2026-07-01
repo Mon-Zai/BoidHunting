@@ -1,20 +1,23 @@
 
-public class DecisionTree
+namespace AI.DecisionTree
 {
-    private Node _rootNode;
-    private Node currentNode;
-    public void TraverseTree()
+    public class DecisionTree
     {
-        if (_rootNode == null) return;
-        currentNode = _rootNode;
-        while (currentNode != null)
+        private Node _rootNode;
+        private Node currentNode;
+        public void TraverseTree()
         {
-            currentNode = currentNode.MakeDecision();
+            if (_rootNode == null) return;
+            currentNode = _rootNode;
+            while (currentNode != null)
+            {
+                currentNode = currentNode.MakeDecision();
+            }
         }
-    }
-    public void SetRoot(Node node)
-    {
-        _rootNode = node;
-        currentNode = _rootNode;
+        public void SetRoot(Node node)
+        {
+            _rootNode = node;
+            currentNode = _rootNode;
+        }
     }
 }

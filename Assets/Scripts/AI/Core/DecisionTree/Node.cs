@@ -1,6 +1,8 @@
-using System;
 
-public abstract class Node
+namespace AI.DecisionTree
 {
-    public abstract Node MakeDecision();
+    public abstract class Node
+    {
+        public abstract Node MakeDecision();
+    }
 }

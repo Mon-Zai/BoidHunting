@@ -15,6 +15,6 @@ public class StateTransition<T>
     }
     public bool Evaluate()
     {
-        return _predicate != null ? _predicate.Evaluate() : false;
+        return _predicate != null ? _predicate.Evaluate() : true;
     }
 }
