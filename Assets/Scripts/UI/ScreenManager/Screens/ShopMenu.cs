@@ -1,23 +1,16 @@
 using UnityEngine;
 
-public class ShopMenu : MonoBehaviour
+public class ShopMenu : BaseScreen
 {
-    [SerializeField] private GameObject _shopMenu;
     [SerializeField] private ShopItemUI[] _shopItems;
-
-    public void OnShopClick()
+    public void BTN_OnShopClick()
     {
-        bool willShow = !_shopMenu.activeSelf;
-        _shopMenu.SetActive(willShow);
-
-        if (willShow)
-        {
-            RefreshItems();
-        }
+        _screenManager.ShowScreen(ScreenName);
+        RefreshItems();
     }
-    public void OnCloseClick()
+    public void BTN_OnCloseClick()
     {
-        _shopMenu.SetActive(false);
+        _screenManager.HideScreen(ScreenName);
     }
 
     public void RefreshItems()

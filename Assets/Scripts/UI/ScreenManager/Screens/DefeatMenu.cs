@@ -1,17 +1,19 @@
 using TMPro;
 using UnityEngine;
 
-public class DefeatMenu : MonoBehaviour
+public class DefeatMenu : BaseScreen
 {
-    [SerializeField] private GameObject _defeatMenu;
     [SerializeField] private TextMeshProUGUI _defeatBoids;
     [SerializeField] private TextMeshProUGUI _defeatFood;
+    private string reason;
 
-    public void ShowDefeatMenu(string reason)
+    public void SetDefeatReason(string reason)
     {
-        Time.timeScale = 0f;
-
-        _defeatMenu.SetActive(true);
+        this.reason = reason;
+    }
+    public override void Show()
+    {
+        base.Show();
         if (reason == "Boids")
         {
             _defeatBoids.gameObject.SetActive(true);

@@ -6,7 +6,7 @@ public class ScreensController : MonoBehaviour
     [SerializeField] private DefeatCondition defeatCondition;
     [SerializeField] private VictoryMenu VictoryMenu;
     [SerializeField] private VictoryCondition victoryCondition;
-
+    [SerializeField] private ScreenManager _screenManager;
     void Start()
     {
         defeatCondition.OnDefeatEvent += ShowDefeatMenu;
@@ -14,11 +14,12 @@ public class ScreensController : MonoBehaviour
     }
     void ShowDefeatMenu(string reason)
     {
-        DefeatMenu.ShowDefeatMenu(reason);
+        DefeatMenu.SetDefeatReason(reason);
+        _screenManager.ShowScreen(DefeatMenu.ScreenName);
     }
     void ShowVictoryMenu()
     {
-        VictoryMenu.ShowVictoryMenu();
+        _screenManager.ShowScreen(VictoryMenu.ScreenName);
     }
     void OnDisable()
     {
